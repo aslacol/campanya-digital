@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrategia Digital Interactiva - Belleza al Día</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para gráficos interactivos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <!-- Google Fonts: Playfair Display + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-pink: #E91E63;
+            --primary-pink-light: #F06292;
+            --secondary-purple: #9C27B0;
+            --secondary-purple-light: #BA68C8;
+            --accent-gold: #FFD700;
+            --accent-gold-light: #FFC107;
+            --bg-cream: #FFF8F0;
+            --bg-white: #FFFFFF;
+            --text-dark: #2D2D2D;
+            --text-gray: #6B6B6B;
+            --footer-bg: #1a1a2e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFF5F7 0%, #FFF8F0 50%, #F3E5F5 100%);
+            background-attachment: fixed;
+            color: var(--text-dark);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Partículas de fondo animadas */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(233, 30, 99, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(156, 39, 176, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: particleFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Tipografía elegante */
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        
+        h2, h3 {
+             background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Header con efecto glassmorphism */
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(233, 30, 99, 0.1);
+            border-radius: 30px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #main-header {
+            padding-top: 1rem; /* Space for the sticky nav */
+        }
+
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(233, 30, 99, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: headerGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes headerGlow {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(-20px, 20px) scale(1.1); opacity: 0.8; }
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+            font-weight: 800; /* Bolder font weight */
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--secondary-purple) 0%, var(--primary-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- STICKY NAVIGATION --- */
+        #header-nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            background: var(--footer-bg);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #header-nav-container.nav-hidden {
+            top: -100px;
+        }
+
+        #header-nav-container .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        #main-nav .nav-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .tab {
+            position: relative;
+            background: transparent;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .tab:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-active {
+            background: linear-gradient(135deg, #E91E63 0%, #9C27B0 100%);
+            color: white !important;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.3);
+            transform: scale(1.05);
+        }
+
+        .tab svg {
+            transition: transform 0.3s ease;
+        }
+        
+        .tab:hover svg {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        /* Contenedores principales */
+        .tab-content {
+            scroll-margin-top: 100px; /* Offset for sticky nav */
+        }
+        main > div > div {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* NEW: Styles for KPI and Pilar cards */
+        .kpi-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .kpi-card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(233, 30, 99, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .kpi-card:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+
+        .kpi-card p:first-child {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .kpi-card p:last-child {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary-purple);
+            background: linear-gradient(45deg, var(--secondary-purple), var(--primary-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pilar-card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pilar-card {
+            background: linear-gradient(160deg, #ffffff, #f9f9f9);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+            display: flex;
+            align-items: flex-start;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .pilar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .pilar-icon {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        }
+
+        .pilar-card h4 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            background: none;
+            -webkit-background-clip: initial;
+            -webkit-text-fill-color: initial;
+        }
+
+        .pilar-card p {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+
+        /* Subtabs modernos */
+        .sub-tab {
+            background: transparent;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 15px;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sub-tab:hover {
+            background: rgba(233, 30, 99, 0.1);
+            color: var(--primary-pink);
+        }
+
+        .sub-tab-active {
+            background: linear-gradient(135deg, #E91E63 0%, #9C27B0 100%);
+            color: white !important;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.3);
+        }
+
+        /* Scrollbar personalizado */
+        .report-content::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .report-content::-webkit-scrollbar-track {
+            background: rgba(233, 30, 99, 0.05);
+            border-radius: 10px;
+        }
+
+        .report-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-purple) 100%);
+            border-radius: 10px;
+        }
+
+        .report-content::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--secondary-purple) 0%, var(--primary-pink) 100%);
+        }
+
+        /* Details/Accordion mejorado */
+        details {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(233, 30, 99, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        details:hover {
+            border-color: var(--primary-pink);
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
+            transform: translateY(-2px);
+        }
+
+        details[open] {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: var(--secondary-purple);
+        }
+
+        summary {
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .arrow-down {
+            transition: transform 0.3s ease;
+            color: var(--primary-pink);
+        }
+
+        details[open] summary .arrow-down {
+            transform: rotate(180deg);
+        }
+
+        /* Tablas elegantes */
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary-pink-light) 0%, var(--secondary-purple-light) 100%);
+            color: white;
+        }
+
+        th {
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+        }
+        
+        tbody tr {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(233, 30, 99, 0.1);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tbody tr:hover {
+            background: rgba(233, 30, 99, 0.05);
+        }
+
+        /* Botones modernos */
+        button, .download-btn, .download-all {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #E91E63 0%, #9C27B0 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            width: 100%;
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .download-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(233, 30, 99, 0.5);
+        }
+
+        .download-all {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            color: #2D2D2D;
+            border: none;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            display: block;
+            margin: 3rem auto;
+            box-shadow: 0 10px 35px rgba(255, 215, 0, 0.4);
+        }
+
+        .download-all:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Anexos mejorados */
+        .anexos-info-box {
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%);
+            border-left: 5px solid var(--primary-pink);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(233, 30, 99, 0.1);
+        }
+
+        .anexos-instructions {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 193, 7, 0.05) 100%);
+            border-left: 5px solid var(--accent-gold);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .anexos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .anexo-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(233, 30, 99, 0.1);
+            border-radius: 25px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .anexo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(156, 39, 176, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .anexo-card:hover {
+            border-color: var(--secondary-purple);
+            box-shadow: 0 20px 50px rgba(156, 39, 176, 0.25);
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .anexo-card:hover::before {
+            opacity: 1;
+        }
+
+        .anexo-card .type {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-purple) 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .anexo-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .anexo-card p {
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Status notifications mejoradas */
+        .status {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #2D2D2D 0%, #1A1A1A 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
+            display: none;
+            animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45A049 100%);
+            box-shadow: 0 10px 40px rgba(76, 175, 80, 0.4);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Overlay de descarga */
+        #download-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.95) 0%, rgba(156, 39, 176, 0.95) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: white;
+            font-size: 1.5rem;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .loader {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Barras de progreso */
+        .progress-bar {
+            height: 10px;
+            border-radius: 50px;
+            overflow: hidden;
+            background: rgba(233, 30, 99, 0.1);
+        }
+
+        .progress-bar > div {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-pink) 0%, var(--secondary-purple) 100%);
+            border-radius: 50px;
+            box-shadow: 0 0 15px rgba(233, 30, 99, 0.5);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        /* Estilo para referencias APA */
+        .apa-reference {
+            text-indent: -2em;
+            padding-left: 2em;
+        }
+
+        /* Responsive mejoras */
+        @media (max-width: 768px) {
+             #main-header {
+                padding-top: 7rem; /* More space for stacked nav */
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            header p {
+                font-size: 1.2rem;
+            }
+
+            .tab {
+                font-size: 0.85rem;
+                padding: 0.75rem 1rem;
+            }
+
+            main > div > div {
+                padding: 1.5rem;
+            }
+
+            .anexos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+             #main-nav .nav-wrapper {
+                flex-direction: column;
+             }
+             #main-nav .bottom-row {
+                 margin-top: 0.5rem;
+             }
+        }
+
+        /* --- NEW FOOTER STYLES --- */
+        footer {
+            background: var(--footer-bg);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+            border-radius: 25px;
+        }
+
+        .footer-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .footer-nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem 2rem;
+            margin-bottom: 2.5rem;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .footer-nav a {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            padding-bottom: 5px;
+        }
+        
+        .footer-nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-purple));
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .footer-nav a:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .footer-nav a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .footer-copyright {
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Botón Scroll to Top */
+        #scrollTopBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--secondary-purple) 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(100px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scrollTopBtn.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+    
+    <script>
+        function changeTab(event, tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('tab-active'));
+
+            const targetContent = document.getElementById(tabId);
+            targetContent.style.display = 'block';
+
+            // AUTO-SCROLL: This line makes the page scroll smoothly to the top of the selected tab content.
+            targetContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+
+            // Activate current tab in both navs
+            const allTabs = document.querySelectorAll(`button[onclick*="'${tabId}'"]`);
+            allTabs.forEach(tab => tab.classList.add('tab-active'));
+        }
+        
+        function changeSubTab(event, subTabId) {
+            // Find parent tab-content to scope the sub-tab changes
+            const parentTabContent = event.currentTarget.closest('.tab-content');
+            parentTabContent.querySelectorAll('.sub-tab-content').forEach(c => c.style.display = 'none');
+            parentTabContent.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('sub-tab-active'));
+            parentTabContent.querySelector(`#${subTabId}`).style.display = 'block';
+            event.currentTarget.classList.add('sub-tab-active');
+        }
+        
+        function startPdfDownload(driveId, fileName) {
+            const overlay = document.getElementById('download-overlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                const downloadUrl = `https://drive.google.com/uc?export=download&id=${driveId}`;
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                overlay.style.display = 'none';
+            }, 2000);
+        }
+        
+        // Funciones de anexos
+        function descargarArchivo(contenido, nombreArchivo, tipo = 'text/plain') {
+            const blob = new Blob([contenido], { type: tipo });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = nombreArchivo;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            mostrarStatus(`✅ Descargado: ${nombreArchivo}`, 'success');
+        }
+        
+        function mostrarStatus(mensaje, tipo = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = mensaje;
+            status.className = `status show ${tipo}`;
+            setTimeout(() => { status.className = 'status'; }, 3000);
+        }
+        
+        function descargarAnexoA() { const csv = `ID,Fecha,Hora,Canal,Formato,Tipo Contenido,Tema,Objetivo,CTA,Responsable,Estado\n1,01/02/2025,19:00,Instagram,Feed + Story,Producto,Lanzamiento campaña Belleza Consciente,Alcance,Descubre más en bio,Community Manager,Pendiente\n2,02/02/2025,12:00,Instagram,Reel,Educativo,Tutorial rutina facial matutina,Engagement,Guarda para tu rutina,Videógrafo,Pendiente\n3,03/02/2025,18:30,Instagram,Story,Interacción,Encuesta: ¿Qué buscas en tu maquillaje?,Interacción,Vota ahora,Community Manager,Pendiente\n4,04/02/2025,13:00,Instagram,Feed,UGC,Testimonio cliente real,Confianza,Lee más testimonios,Diseñador,Pendiente\n5,05/02/2025,19:30,Instagram,Reel,Educativo,5 razones cosmética natural,Educación,Comparte,Videógrafo,Pendiente\n6,06/02/2025,11:00,Instagram,Feed Carrusel,Producto,Colección cuidado capilar,Consideración,Desliza,Diseñador,Pendiente\n7,07/02/2025,17:00,Instagram,Story,Conexión,Behind the scenes producción,Conexión,Swipe up,Community Manager,Pendiente\n8,01/02/2025,20:00,Facebook,Link Post,Educativo,Artículo: 10 beneficios cosmética natural,Tráfico,Lee artículo,Copywriter,Pendiente\n9,03/02/2025,13:00,Facebook,Video nativo,Tutorial,Limpieza facial paso a paso,Engagement,Comparte,Videógrafo,Pendiente\n10,05/02/2025,19:00,Facebook,Pregunta,Comunidad,¿Cuál es tu mayor preocupación piel?,Interacción,Comenta,Community Manager,Pendiente\n11,01/02/2025,19:00,TikTok,Video 30s,Educational,POV usando cosmética natural,Awareness,#BellezaNatural,Videógrafo,Pendiente\n12,04/02/2025,18:00,TikTok,Video 25s,Entretenimiento,Mito vs realidad parabenos,Engagement,#SkincareColombiano,Videógrafo,Pendiente\n13,01/02/2025,10:00,Blog,Artículo,SEO,Guía cosmética natural certificada Colombia,Tráfico orgánico,Descarga PDF,Copywriter,Pendiente\n14,08/02/2025,10:00,Blog,Artículo,SEO,Rutina skincare piel grasa natural,Tráfico orgánico,Quiz tipo piel,Copywriter,Pendiente\n15,01/02/2025,09:00,Email,Newsletter,Bienvenida,Descarga guía + 20% OFF,Conversión,Obtén descuento,Email Marketing,Pendiente`; descargarArchivo(csv, 'Anexo_A_Calendario_Actuacion.csv', 'text/csv'); }
+        function descargarAnexoB() { const csv = `Canal/Concepto,Objetivo Principal,Monto Asignado,% del Total,Periodo,KPIs Esperados\nMETA ADS (FB + IG),Conversión + Leads,$2400000,34.3%,Días 1-30,"3000 clics, 100 leads, CPL $24000, ROAS 3.5:1"\nGOOGLE ADS,Captación demanda + Remarketing,$1400000,20.0%,Días 5-30,"2500 clics, 40 leads, 25 conversiones"\nTIKTOK ADS,Awareness + Engagement joven,$800000,11.4%,Días 8-30,"250000 impresiones, 2000 clics, 30 leads"\nProducción Contenidos,Calidad y profesionalismo,$1400000,20.0%,Días -5 a 30,"60 piezas gráficas, 12 videos, 4 artículos"\nEmail Marketing + CRM,Nurturing leads + Retención,$350000,5.0%,Días 1-30,"150 leads CRM, 4 campañas, 18% open rate"\nHerramientas Analítica,Medición y optimización,$280000,4.0%,Mes completo,"Dashboards actualizados, mapas calor"\nReserva Optimización,Escalar campañas ganadoras,$350000,5.0%,Días 15-30,Aplicar a canal mejor ROAS\nContingencia,Imprevistos y oportunidades,$20000,0.3%,Disponible,Buffer\nTOTAL,,$7000000,100%,,\n\nDESGLOSE META ADS\nTipo de Campaña,Objetivo Meta,Presupuesto,Días Activa,Inversión Diaria,KPIs\nTráfico a Landing,Awareness + Leads,$900000,30,$30000,"1125 clics, 40 leads"\nConversiones (Compra),Ventas directas,$800000,23,$34780,"25 conv, CPA $32000, Ingr $2800000"\nGeneración de Leads,Formulario nativo IG,$400000,30,$13333,"40 leads, CPL $10000"\nEngagement,Interacción + Seguidores,$300000,21,$14285,"1500 seguidores, 8000 interacciones"\n\nDESGLOSE GOOGLE ADS\nTipo de Campaña,Presupuesto,Estrategia,KPIs Esperados\nGoogle Search,$700000,Captura demanda activa,"1100 clics, CPC $636, 22 conversiones"\nGoogle Display,$400000,Remarketing visitantes,"5000 impresiones, 450 clics, 8 conversiones"\nGoogle Shopping,$300000,Feed productos,"950 clics, 10 ventas, ROAS 2.8:1"\n\nCRONOGRAMA INVERSIÓN SEMANAL\nSemana,Meta Ads,Google Ads,TikTok,Producción,Herramientas,Total Semanal\nPre-campaña,$0,$0,$0,$700000,$280000,$980000\nSemana 1,$600000,$200000,$0,$200000,$70000,$1070000\nSemana 2,$600000,$400000,$300000,$200000,$0,$1500000\nSemana 3,$600000,$400000,$300000,$200000,$0,$1500000\nSemana 4,$600000,$400000,$200000,$100000,$0,$1300000 + reserva $650000\nTOTAL,$2400000,$1400000,$800000,$1400000,$350000,$7000000`; descargarArchivo(csv, 'Anexo_B_Presupuesto_Detallado.csv', 'text/csv'); }
+        function descargarAnexoC() { const contenido = `ANEXO C: DISEÑO DE KPI Y MÉTRICAS\nEstrategia de Marketing Digital - Belleza al Día\n\n═══════════════════════════════════════════════════════════\n\nDICCIONARIO DE KPIs PRINCIPAIS\n\n1. META ADS (Facebook + Instagram)\n──────────────────────────────────\n\nKPI: Impresiones\nDefinición: Número de veces que se mostró el anuncio\nFórmula: Suma todas las veces mostrado\nUnidad: Número entero\nMeta: 280,000\nUmbral Mínimo: 220,000\nHerramienta: Meta Ads Manager\n\nKPI: CTR (Click-Through Rate)\nDefinición: Porcentaje de personas que hicieron clic\nFórmula: (Clics / Impresiones) × 100\nUnidad: Porcentaje\nMeta: 2.3%\nUmbral Mínimo: 1.8%\nHerramienta: Meta Ads Manager\n\nKPI: CPC (Costo Por Clic)\nDefinición: Costo promedio de cada clic\nFórmula: Gasto total / Clics totales\nUnidad: COP\nMeta: $800\nUmbral Máximo: $1,200\nHerramienta: Meta Ads Manager\n\nKPI: CPL (Costo Por Lead)\nDefinición: Costo para generar cada lead\nFórmula: Gasto campaña lead / Leads generados\nUnidad: COP\nMeta: $10,000\nUmbral Máximo: $15,000\nHerramienta: Cálculo manual\n\nKPI: ROAS (Return on Ad Spend)\nDefinición: Retorno de inversión publicitaria\nFórmula: Ingresos atribuidos / Gasto\nUnidad: Ratio\nMeta: 3.5:1\nUmbral Mínimo: 2.5:1\nHerramienta: Meta Pixel + Conversions API\n\nKPI: Engagement Rate\nDefinición: Tasa de interacción con contenido\nFórmula: [(Likes + Comentarios + Compartidos) / Alcance] × 100\nUnidad: Porcentaje\nMeta: 5.2%\nUmbral Mínimo: 3.5%\nHerramienta: Meta Business Suite\n\n\n2. GOOGLE ADS\n──────────────\n\nKPI: CTR Search\nDefinición: Tasa de clics en búsqueda\nFórmula: (Clics / Impresiones) × 100\nUnidad: Porcentaje\nMeta: 2.8%\nUmbral Mínimo: 2.0%\n\nKPI: Nivel de Calidad\nDefinición: Puntuación de calidad palabras clave\nEscala: 1-10\nMeta: 7-8\nUmbral Mínimo: >5\n\nKPI: Tasa de Conversión\nDefinición: Porcentaje clics que convierten\nFórmula: (Conversiones / Clics) × 100\nMeta: 2.2%\nUmbral Mínimo: 1.5%\n\n\n3. LANDING PAGE\n────────────────\n\nKPI: Tasa de Conversión Landing\nDefinición: % visitantes que completan formulario\nFórmula: (Formularios completados / Sesiones) × 100\nMeta: 2.5%\nUmbral Mínimo: 1.8%\n\nKPI: Tasa de Rebote\nDefinición: Sesiones sin interacción\nFórmula: (Rebotes / Sesiones) × 100\nMeta: 42%\nUmbral Máximo: 55%\n\nKPI: Tiempo Promedio en Página\nDefinición: Duración media de sesión\nMeta: 2:45 minutos\nUmbral Mínimo: 2:00 minutos\n\n\n═══════════════════════════════════════════════════════════\n\nVENTANAS DE ATRIBUCIÓN\n\nMeta Ads:\n- Clic: 7 días después del clic\n- Vista: 1 día después de ver el anuncio\n- Modelo: Último clic\n\nGoogle Ads:\n- Clic: 30 días\n- Modelo: Último clic no directo\n\nTikTok Ads:\n- Clic: 7 días\n- Vista: 1 día\n\n\n═══════════════════════════════════════════════════════════\n\nEVENTOS GA4 A CONFIGURAR\n\n// Evento Scroll 50%\ngtag('event', 'scroll_50', {\n  'page_location': window.location.href\n});\n\n// Evento Inicio Formulario\ngtag('event', 'form_start', {\n  'form_name': 'lead_magnet_form'\n});\n\n// Evento Envío Formulario\ngtag('event', 'form_submit', {\n  'form_name': 'lead_magnet_form'\n});\n\n// Evento Compra\ngtag('event', 'purchase', {\n  transaction_id: 'T12345',\n  value: 85000,\n  currency: 'COP'\n});\n\n\n═══════════════════════════════════════════════════════════\n\nBENCHMARKS DE REFERENCIA\n\nMétrica                     | Benchmark Industria | Meta Belleza al Día\n─────────────────────────────────────────────────────────────────────\nCTR Facebook Ads            | 0.9%                | 2.3%\nCPC Facebook (Belleza)        | $800-1,500          | $800\nTasa Conv. E-commerce       | 2.5-3%              | 2.5%\nEngagement Rate Instagram     | 1.22%               | 5.5%\nOpen Rate Email (Belleza)     | 18-22%              | 22%\nROAS Primera Campaña          | 1.5-2:1             | 0.84:1 (enfoque LTV)\n\nFuentes:\n- WordStream 2024\n- Meta Business Insights 2024\n- Mailchimp Benchmarks 2024\n- Later Instagram Report 2024\n\n\n═══════════════════════════════════════════════════════════\n\nFIN DEL ANEXO C`; descargarArchivo(contenido, 'Anexo_C_KPIs_Metricas.txt', 'text/plain'); }
+        function descargarAnexoD() { const contenido = `ANEXO D: PLANTILLA DE REPORTE SEMANAL\nEstrategia de Marketing Digital - Belleza al Día\n\n═══════════════════════════════════════════════════════════\n\nESTRUCTURA DE PRESENTACIÓN (12 SLIDES)\n\nSLIDE 1: PORTADA\n─────────────────\n- Título: "Reporte Semanal Campaña Belleza Consciente"\n- Semana X (Fechas DD/MM - DD/MM/2025)\n- Logo Belleza al Día\n- Fecha de reporte\n\n\nSLIDE 2: RESUMEN EJECUTIVO\n───────────────────────────\n\nSemáforo de Salud de Campaña: 🟢 VERDE / 🟡 AMARILLO / 🔴 ROJO\n\nMétricas Clave:\n\nMétrica                   | Semana  | Anterior | Variación | Meta Mes | % Avance\n──────────────────────────────────────────────────────────────────────────────\nInversión Publicitaria    | $X      | $X       | +X%       | $4.6M    | X%\nLeads Generados           | X       | X        | +X        | 170      | X%\nCPL Promedio              | $X      | $X       | -X%       | $23,000  | ✓/✗\nConversiones (Ventas)     | X       | X        | +X        | 43       | X%\nROAS                      | X:1     | X:1      | +X%       | 0.84:1   | ✓/✗\nSesiones Landing          | X       | X        | +X%       | 8,500    | X%\n\n🔥 HIGHLIGHT DE LA SEMANA:\n[Logro más importante o hallazgo clave]\n\n⚠️ ALERTA PRINCIPAL:\n[Problema que requiere atención o ninguno]\n\n\nSLIDE 3: INVERSIÓN Y RENDIMIENTO GENERAL\n─────────────────────────────────────────\n\n[Gráfico de Barras: Gasto por Canal]\n\nTabla Comparativa:\n\nCanal        | Inversión | Leads | CPL     | Conversiones | ROAS\n─────────────────────────────────────────────────────────────────\nMeta Ads     | $X        | X     | $X      | X            | X:1\nGoogle Ads   | $X        | X     | $X      | X            | X:1\nTikTok Ads   | $X        | X     | $X      | X            | X:1\nTOTAL        | $X        | X     | $X prom | X            | X:1\n\n\nSLIDE 4: META ADS - RENDIMIENTO\n────────────────────────────────\n\nMétricas Principales:\n- Gasto: $X\n- Impresiones: X\n- Alcance: X personas\n- CTR: X%\n- CPC: $X\n- Leads: X\n- CPL: $X\n- Conversiones: X\n- ROAS: X:1\n\nTop 3 Creatividades de la Semana:\n1. [ID/Nombre] - CTR X% - Conversiones X\n2. [ID/Nombre] - CTR X% - Conversiones X\n3. [ID/Nombre] - CTR X% - Conversiones X\n\nRecomendación:\n[Acción específica basada en datos]\n\n\nSLIDE 5: GOOGLE ADS - RENDIMIENTO\n──────────────────────────────────\n\nRendimento por Tipo:\n\nSearch       | Display     | Shopping\n────────────────────────────────────────\nGasto: $X    | Gasto: $X   | Gasto: $X\nClics: X     | Clics: X    | Clics: X\nCTR: X%      | CTR: X%     | CTR: X%\nConv: X      | Conv: X     | Conv: X\n\nTop 5 Keywords (por conversiones):\n1. [Palabra clave] - X conv - CPA $X\n2. [...]\n\n\nSLIDE 6: TIKTOK Y OTROS CANALES\n────────────────────────────────\n\nTikTok Ads:\n- Impresiones: X\n- Video Views: X\n- CTR: X%\n- Leads: X\n\nEmail Marketing:\n- Campañas enviadas: X\n- Open Rate: X%\n- CTR: X%\n- Conversiones: X\n\nRedes Sociales Orgánicas:\n- Nuevos seguidores: +X\n- Engagement Rate: X%\n- Alcance: X\n\n\nSLIDE 7: LANDING PAGE Y CONVERSIÓN\n───────────────────────────────────\n\n[Gráfico Embudo de Conversión]\n\nImpresiones → Clics → Landing → Leads → Compras\n     X          X       X         X         X\n\nFuentes de Tráfico:\n[Gráfico Pie Chart]\n- Meta Ads: X%\n- Google: X%\n- Orgánico: X%\n- TikTok: X%\n\nTasa de Conversión por Fuente:\n- Meta: X%\n- Google: X%\n- TikTok: X%\n\nInsights Hotjar:\n[Observación de comportamiento]\n\n\nSLIDE 8: ANÁLISIS DE LEADS\n───────────────────────────\n\nTotal Leads Generados (Acumulado): X\n\nDistribución por Fuente:\n[Gráfico de Barras]\n\nCalidad de Leads:\n- Tasa de contacto 24h: X%\n- Tasa de respuesta: X%\n- Leads convertidos a clientes: X (X%)\n\nValor Generado: $X\n\n\nSLIDE 9: TESTS A/B\n──────────────────\n\nTests en Curso:\n\nTest                   | Variante A    | Variante B    | Ganador Parcial | Estado\n────────────────────────────────────────────────────────────────────────────────\n[Nombre test]          | [Métrica A]   | [Métrica B]   | A/B/Empate      | En curso\n\nTests Finalizados:\n\nTest                   | Ganador | Impacto\n─────────────────────────────────────────\n[Nombre]               | Var B   | CTR +X%\n\n\nSLIDE 10: CONTENIDO ORGÁNICO\n─────────────────────────────\n\nResumen de Publicaciones:\n- Instagram: X posts, X stories, X reels\n- Facebook: X posts\n- TikTok: X videos\n- Blog: X artículo\n\nTop 3 Posts por Engagement:\n1. [Descripción] - Canal - Engagement X%\n2. [...]\n\nMejor Reel/TikTok:\n[Descripción] - X visualizaciones - X% engagement\n\nCrecimiento Comunidad:\n- Seguidores: +X (X%)\n\n\nSLIDE 11: INSIGHTS Y APRENDIZAJES\n──────────────────────────────────\n\n✅ QUÉ FUNCIONÓ (3 puntos):\n1. [Insight con datos]\n2. [...]\n\n❌ QUÉ NO FUNCIONÓ (2 puntos):\n1. [Insight con datos]\n2. [...]\n\n💡 OPORTUNIDAD DETECTADA:\n[Oportunidad basada en análisis]\n\n\nSLIDE 12: ACCIONES PRÓXIMA SEMANA\n──────────────────────────────────\n\nPRIORIDADES (Top 5):\n1. [Acción prioritaria]\n2. [...]\n\nTests A/B a Lanzar:\n- [Nuevo test]\n\nAjustes de Presupuesto:\n- [Reasignación si aplica]\n\nNuevas Creatividades:\n- X nuevas piezas\n- X nuevos videos\n\nContenidos Programados:\n- X publicaciones Instagram\n- X posts Facebook\n- X videos TikTok\n- X email\n\n\n═══════════════════════════════════════════════════════════\n\nINSTRUCCIONES DE USO:\n\n1. Copia esta estructura a PowerPoint o Google Slides\n2. Completa con datos reales cada semana\n3. Actualiza gráficos con información actual\n4. Personaliza con colores de marca Belleza al Día\n5. Presenta cada lunes al equipo\n\n\n═══════════════════════════════════════════════════════════\n\nFIN DEL ANEXO D`; descargarArchivo(contenido, 'Anexo_D_Reporte_Semanal.txt', 'text/plain'); }
+        function descargarAnexoE() { const contenido = `ANEXO E: PLANTILLA DE REPORTE FINAL\n[Similar a Anexo D pero expandido a 20+ slides]\nIncluye análisis completo del mes con conclusiones estratégicas.`; descargarArchivo(contenido, 'Anexo_E_Reporte_Final.txt'); }
+        function descargarAnexoF() { const csv = `ID Lead,Fecha Captura,Nombre,Email,Teléfono,Ciudad,Fuente Principal,utm_source,utm_medium,utm_campaign,Calificación,Etapa Pipeline,Estado,Valor Compra\n1,01/02/2025,María González,maria.g@email.com,+57 310 123 4567,Bogotá,Meta Ads,facebook,cpc,conversion_compra,Caliente,Nuevo,Activo,0\n2,01/02/2025,Carlos Pérez,carlos.p@email.com,+57 315 234 5678,Medellín,Google Ads,google,cpc,search_cosmetica,Tibio,Contactado,Activo,0\n3,02/02/2025,Laura Martínez,laura.m@email.com,+57 320 345 6789,Cali,Instagram Orgánico,instagram,social,belleza_consciente,Frío,Nuevo,Activo,0`; descargarArchivo(csv, 'Anexo_F_CRM_Leads.csv', 'text/csv'); }
+        function descargarAnexoG() { const html = `<!DOCTYPE html>\n<html lang="es">\n<head>\n    <meta charset="UTF-8">\n    <title>Política de Tratamiento de Datos Personales - Belleza al Día</title>\n    <style>\n        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; }\n        h1 { color: #333; }\n        h2 { color: #666; margin-top: 30px; }\n        p { text-align: justify; }\n    </style>\n</head>\n<body>\n    <h1>POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES</h1>\n    <h2>BELLEZA AL DÍA S.A.S.</h2>\n    \n    <h2>1. IDENTIFICACIÓN DEL RESPONSABLE</h2>\n    <p><strong>Razón Social:</strong> Belleza al Día S.A.S.<br>\n    <strong>NIT:</strong> [Número]<br>\n    <strong>Dirección:</strong> [Dirección completa]<br>\n    <strong>Ciudad:</strong> [Ciudad], Colombia<br>\n    <strong>Teléfono:</strong> [Teléfono]<br>\n    <strong>Email:</strong> datos@bellezaaldia.com</p>\n    \n    <h2>2. FINALIDAD DEL TRATAMIENTO</h2>\n    <p>Los datos personales recolectados serán utilizados para:</p>\n    <ul>\n        <li>Procesar pedidos y transacciones comerciales</li>\n        <li>Enviar comunicaciones comerciales y promocionales</li>\n        <li>Mejorar nuestros productos y servicios</li>\n        <li>Realizar análisis estadísticos y estudios de mercado</li>\n        <li>Cumplir obligaciones legales y contractuales</li>\n    </ul>\n    \n    <h2>3. DATOS RECOLECTADOS</h2>\n    <ul>\n        <li>Datos de identificación: nombre, apellido, documento</li>\n        <li>Datos de contacto: email, teléfono, dirección</li>\n        <li>Datos de navegación: IP, cookies, comportamiento</li>\n        <li>Datos transaccionales: historial de compras</li>\n    </ul>\n    \n    <h2>4. DERECHOS DE LOS TITULARES</h2>\n    <p>Conforme al artículo 8 de la Ley 1581 de 2012, usted tiene derecho a:</p>\n    <ul>\n        <li>Conocer, actualizar y rectificar sus datos personales</li>\n        <li>Solicitar prueba de la autorización otorgada</li>\n        <li>Ser informado sobre el uso de sus datos</li>\n        <li>Presentar quejas ante la SIC</li>\n        <li>Revocar autorización y/o solicitar supresión</li>\n        <li>Acceder gratuitamente a sus datos</li>\n    </ul>\n    \n    <h2>5. PROCEDIMIENTO PARA EJERCER DERECHOS</h2>\n    <p><strong>Email:</strong> datos@bellezaaldia.com<br>\n    <strong>Plazo de respuesta:</strong> 15 días hábiles (consultas), 8 días (reclamos)</p>\n    \n    <h2>6. TRANSFERENCIA DE DATOS</h2>\n    <p>Sus datos pueden ser transferidos a:</p>\n    <ul>\n        <li>Proveedores de email marketing (ej: Mailchimp - USA)</li>\n        <li>Plataformas de pago (PayU, Mercado Pago)</li>\n        <li>Servicios de analítica (Google LLC - USA)</li>\n        <li>Operadores logísticos</li>\n    </ul>\n    \n    <p>Todos obligados contractualmente a proteger sus datos.</p>\n    \n    <p><strong>Fecha de actualización:</strong> Enero 2025<br>\n    <strong>Vigencia:</strong> Indefinida</p>\n</body>\n</html>`; descargarArchivo(html, 'Anexo_G_Politica_Datos.html', 'text/html'); }
+        function descargarAnexoH() { const js = `// ANEXO H: CÓDIGOS DE TRACKING\n// Belleza al Día - Estrategia de Marketing Digital\n\n// ═══════════════════════════════════════════════════════\n// 1. GOOGLE ANALYTICS 4\n// ═══════════════════════════════════════════════════════\n\n// Código base GA4 (pegar en <head>)\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-TU_MEDICION_ID"></sc` + `ript>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n  gtag('config', 'G-TU_MEDICION_ID');\n</sc` + `ript>\n\n// Evento Scroll 50%\ngtag('event', 'scroll_50', {\n  'page_location': window.location.href\n});\n\n// Evento Inicio Formulario\ngtag('event', 'form_start', {\n  'form_name': 'lead_magnet_form'\n});\n\n// Evento Envío Formulario\ngtag('event', 'form_submit', {\n  'form_name': 'lead_magnet_form',\n  'form_destination': 'crm_integration'\n});\n\n// Evento Compra\ngtag('event', 'purchase', {\n  transaction_id: 'T12345',\n  value: 85000,\n  currency: 'COP',\n  items: [{\n    item_id: 'SKU123',\n    item_name: 'Crema Facial Natural',\n    quantity: 1,\n    price: 85000\n  }]\n});\n\n\n// ═══════════════════════════════════════════════════════\n// 2. META PIXEL (Facebook/Instagram)\n// ═══════════════════════════════════════════════════════\n\n<script>\n!function(f,b,e,v,n,t,s)\n{if(f.fbq)return;n=f.fbq=function(){n.callMethod?\nn.callMethod.apply(n,arguments):n.queue.push(arguments)};\nif(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';\nn.queue=[];t=b.createElement(e);t.async=!0;\nt.src=v;s=b.getElementsByTagName(e)[0];\ns.parentNode.insertBefore(t,s)}(window, document,'script',\n'https://connect.facebook.net/en_US/fbevents.js');\nfbq('init', 'TU_PIXEL_ID');\nfbq('track', 'PageView');\n</sc` + `ript>\n// Evento Lead generado\nfbq('track', 'Lead', {\n  content_name: 'Formulario Lead Magnet',\n  value: 90000,\n  currency: 'COP'\n});\n\n// Evento Compra\nfbq('track', 'Purchase', {\n  value: 85000,\n  currency: 'COP',\n  content_type: 'product'\n});\n\n\n// ═══════════════════════════════════════════════════════\n// 3. TIKTOK PIXEL\n// ═══════════════════════════════════════════════════════\n\n<script>\n!function (w, d, t) {\n  w.TiktokAnalyticsObject=t;\n  var ttq=w[t]=w[t]||[];\n  ttq.methods=["page","track","identify"];\n  ttq.load=function(e){\n    var i="https://analytics.tiktok.com/i18n/pixel/events.js";\n    ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date;\n    var o=document.createElement("script");\n    o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e;\n    var a=document.getElementsByTagName("script")[0];\n    a.parentNode.insertBefore(o,a)\n  };\n  ttq.load('TU_PIXEL_TIKTOK');\n  ttq.page();\n}(window, document, 'ttq');\n</sc` + `ript>\n\n// Evento Lead\nttq.track('SubmitForm', {\n  content_name: 'Lead Magnet'\n});\n\n\n// ═══════════════════════════════════════════════════════\n// 4. BANNER DE COOKIES\n// ═══════════════════════════════════════════════════════\n\n<div id="cookie-banner" style="position:fixed;bottom:0;width:100%;background:#333;color:#fff;padding:20px;display:none;">\n    <p>🍪 Este sitio usa cookies esenciales y analíticas/publicitarias para mejorar tu experiencia.</p>\n    <button onclick="aceptarCookies()">Aceptar todas</button>\n    <button onclick="rechazarCookies()">Rechazar no esenciales</button>\n    <a href="/politica-cookies" style="color:#fff;">Leer más</a>\n</div>\n\n<script>\nfunction mostrarBanner() {\n    if (!localStorage.getItem('cookies-aceptadas')) {\n        document.getElementById('cookie-banner').style.display = 'block';\n    }\n}\n\nfunction aceptarCookies() {\n    localStorage.setItem('cookies-aceptadas', 'true');\n    document.getElementById('cookie-banner').style.display = 'none';\n    // Activar cookies analíticas y publicitarias\n}\n\nfunction rechazarCookies() {\n    localStorage.setItem('cookies-aceptadas', 'false');\n    document.getElementById('cookie-banner').style.display = 'none';\n}\n\nwindow.onload = mostrarBanner;\n</sc` + `ript>`; descargarArchivo(js, 'Anexo_H_Codigos_Tracking.js', 'text/javascript'); }
+        function descargarAnexoI() { const contenido = `ANEXO I: GUÍA DE CREATIVIDADES Y ESPECIFICACIONES TÉCNICAS\n\nINSTAGRAM\n─────────\nFeed Cuadrado: 1080x1080px\nFeed Vertical: 1080x1350px\nStories: 1080x1920px (máx 15s)\nReels: 1080x1920px (15-90s, óptimo 30-45s)\nFormatos: JPG, PNG, MP4\nHorarios: 12-1 PM, 6-8 PM\n\nFACEBOOK\n────────\nImagen Link: 1200x628px\nVideo: 1280x720px mín\nCarrusel: 1080x1080px\n\nTIKTOK\n──────\nVideo: 1080x1920px (9:16)\nDuración: 21-34s óptimo\nFPS: 30fps mínimo\nFormato: MP4, MOV\n\nGOOGLE ADS\n──────────\nDisplay Responsivo: Múltiples tamaños\nLogo: 1200x1200px y 1200x300px\nImagen Marketing: 1200x628px`; descargarArchivo(contenido, 'Anexo_I_Guia_Creatividades.txt'); }
+        function descargarAnexoJ() { const csv = `Categoría,Item,Completado,Responsable,Notas\nLegal,Política de Datos publicada,No,Legal,\nLegal,Términos y Condiciones actualizados,No,Legal,\nLegal,Banner cookies implementado,No,Técnico,\nLegal,Checkboxes consentimiento formularios,No,Diseñador,\nLegal,Registro RNBD iniciado,No,Legal,\nTécnico,Meta Pixel instalado,No,Técnico,\nTécnico,GA4 configurado,No,Técnico,\nTécnico,Eventos conversión testeados,No,Técnico,\nTécnico,SSL activo,No,Técnico,\nTécnico,Velocidad carga <3s,No,Técnico,\nContenido,15 piezas gráficas listas,No,Diseñador,\nContenido,4 videos editados,No,Videógrafo,\nContenido,Copies aprobados,No,Copywriter,\nContenido,Artículo blog publicado,No,Copywriter,\nCampañas,Estructuras Meta Ads creadas,No,Paid Media,\nCampañas,Audiencias configuradas,No,Paid Media,\nCampañas,Presupuestos asignados,No,Paid Media,\nCampañas,Pixels conectados,No,Técnico,`; descargarArchivo(csv, 'Anexo_J_Checklist_Implementacion.csv', 'text/csv'); }
+        function descargarAnexoK() { const contenido = `ANEXO K: INSTRUCCIONES DASHBOARD LOOKER STUDIO\n\nCONFIGURACIÓN:\n1. Ir a https://lookerstudio.google.com\n2. Crear nuevo informe\n3. Conectar fuentes de datos:\n   - Google Analytics 4\n   - Google Ads\n   - Google Sheets (para CRM)\n   \nPÁGINAS A CREAR:\n1. Vista General (KPIs principales)\n2. Ads Performance\n3. Landing Page\n4. Leads\n5. Contenido\n\nMÉTRICAS CLAVE:\n- Inversión total\n- Leads generados\n- CPL\n- Conversiones\n- ROAS`; descargarArchivo(contenido, 'Anexo_K_Dashboard_Instrucciones.txt'); }
+        function descargarAnexoL() { const contenido = `ANEXO L: COPIES Y GUIONES DE CONTENIDO\n\n30 COPIES INSTAGRAM FEED:\n\n1. "🌿 ¿Sabías que tu piel absorbe hasta el 60% de lo que le aplicas? \nElige cosmética natural y dale a tu piel solo lo mejor de la naturaleza. \n#BellezaNatural #CosmeticaOrganica #BellezaAlDia"\n\n2. "✨ Rutina de mañana perfecta:\n1️⃣ Limpieza suave\n2️⃣ Tónico natural\n3️⃣ Sérum vitamina C\n4️⃣ Crema hidratante\n5️⃣ Protector solar mineral\nGuarda este post para tu rutina diaria 💚"\n\n[... 28 más]\n\n12 GUIONES REELS/TIKTOKS:\n\nREEL 1: "5 Razones para elegir cosmética natural"\nHook (3s): "¿Sigues usando productos con químicos tóxicos?"\nDesarrollo:\n1. Sin parabenos\n2. Sin sulfatos\n3. Sin fragancias sintéticas\n4. Biodegradable\n5. Cruelty-free\nCTA: "¿Cuál te sorprendió más? Comenta 👇"\n\n[... 11 más]`; descargarArchivo(contenido, 'Anexo_L_Copies_Guiones.txt'); }
+        function descargarAnexoM() { const csv = `Métrica,Benchmark Global,Benchmark Colombia,Meta Belleza al Día,Fuente\nCTR Facebook Ads,0.9%,1.2%,2.3%,WordStream 2024\nCPC Facebook Belleza,$1.20 USD,$800-1500 COP,$800 COP,Meta Business\nTasa Conversión Ecommerce,2.5-3%,1.8-2.5%,2.5%,Shopify 2024\nEngagement Instagram,1.22%,2.5-3.5%,5.5%,Later 2024\nOpen Rate Email,18-22%,20-24%,22%,Mailchimp 2024\nROAS Primera Campaña,1.5-2:1,0.8-1.5:1,0.84:1,SmartInsights`; descargarArchivo(csv, 'Anexo_M_Benchmarks.csv', 'text/csv'); }
+        function descargarAnexoN() { const html = `<!DOCTYPE html>\n<html lang="es">\n<head>\n    <meta charset="UTF-8">\n    <title>Recursos y Enlaces Útiles</title>\n</head>\n<body>\n    <h1>ANEXO N: RECURSOS Y ENLACES ÚTILES</h1>\n    \n    <h2>HERRAMIENTAS GRATUITAS</h2>\n    <ul>\n        <li><a href="https://canva.com">Canva</a> - Diseño gráfico</li>\n        <li><a href="https://www.capcut.com">CapCut</a> - Edición video</li>\n        <li><a href="https://unsplash.com">Unsplash</a> - Imágenes stock</li>\n        <li><a href="https://remove.bg">Remove.bg</a> - Quitar fondos</li>\n        <li><a href="https://tinypng.com">TinyPNG</a> - Comprimir imágenes</li>\n    </ul>\n    \n    <h2>CAPACITACIÓN</h2>\n    <ul>\n        <li><a href="https://skillshop.withgoogle.com">Google Skillshop</a></li>\n        <li><a href="https://www.facebookblueprint.com">Meta Blueprint</a></li>\n        <li><a href="https://academy.hubspot.com">HubSpot Academy</a></li>\n    </ul>\n    \n    <h2>NORMATIVA COLOMBIA</h2>\n    <ul>\n        <li><a href="https://www.sic.gov.co">SIC - Protección de Datos</a></li>\n        <li><a href="https://www.invima.gov.co">INVIMA - Cosméticos</a></li>\n        <li><a href="https://www.funcionpublica.gov.co">Función Pública</a></li>\n    </ul>\n</body>\n</html>`; descargarArchivo(html, 'Anexo_N_Recursos_Enlaces.html', 'text/html'); }
+        function descargarTodos() {
+            mostrarStatus('⏳ Descargando 14 anexos...', 'info');
+            const funcs = [descargarAnexoA, descargarAnexoB, descargarAnexoC, descargarAnexoD, descargarAnexoE, descargarAnexoF, descargarAnexoG, descargarAnexoH, descargarAnexoI, descargarAnexoJ, descargarAnexoK, descargarAnexoL, descargarAnexoM, descargarAnexoN];
+            funcs.forEach((func, index) => setTimeout(func, index * 200));
+            setTimeout(() => { mostrarStatus('✅ ¡Todos los anexos descargados!', 'success'); }, funcs.length * 200 + 200);
+        }
+        
+        // Lógica de Gráficos
+        document.addEventListener('DOMContentLoaded', () => {
+            Chart.register(ChartDataLabels);
+            const budgetCtx = document.getElementById('budgetChart').getContext('2d');
+            new Chart(budgetCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Meta Ads', 'Producción', 'Google Ads', 'TikTok Ads', 'Otros'],
+                    datasets: [{
+                        data: [34.3, 20, 20, 11.4, 14.3],
+                        backgroundColor: [
+                            'rgba(233, 30, 99, 0.8)',
+                            'rgba(156, 39, 176, 0.8)',
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(233, 30, 99, 0.6)',
+                            'rgba(156, 39, 176, 0.6)'
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { size: 13, weight: '600' } } },
+                        datalabels: {
+                            color: '#fff',
+                            font: { weight: 'bold', size: 14 },
+                            formatter: (value) => value.toFixed(1) + '%'
+                        }
+                    }
+                }
+            });
+            
+            const commonBarOptions = (title) => ({
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { ticks: { display: false }, grid: { display: false } },
+                    y: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    title: { display: true, text: title, font: { size: 18, weight: '700' }, color: '#2D2D2D' },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        color: '#2D2D2D',
+                        font: { weight: 'bold', size: 12 },
+                        formatter: (value) => new Intl.NumberFormat('es-CO').format(value)
+                    }
+                }
+            });
+            
+            new Chart(document.getElementById('kpiAwareness').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Impresiones', 'Alcance Único', 'Nuevos Seguidores'],
+                    datasets: [{
+                        data: [450000, 85000, 1500],
+                        backgroundColor: [
+                            'rgba(233, 30, 99, 0.7)',
+                            'rgba(156, 39, 176, 0.7)',
+                            'rgba(255, 193, 7, 0.7)'
+                        ]
+                    }]
+                },
+                options: commonBarOptions('Awareness')
+            });
+            
+            new Chart(document.getElementById('kpiActivation').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Sesiones Web', 'Leads', 'Tasa Conv. (%)'],
+                    datasets: [{
+                        data: [8500, 170, 2.5],
+                        backgroundColor: [
+                            'rgba(233, 30, 99, 0.7)',
+                            'rgba(156, 39, 176, 0.7)',
+                            'rgba(255, 193, 7, 0.7)'
+                        ]
+                    }]
+                },
+                options: commonBarOptions('Acquisition & Activation')
+            });
+            
+            new Chart(document.getElementById('kpiConversion').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Ventas', 'Ticket Promedio ($)', 'ROAS'],
+                    datasets: [{
+                        data: [43, 90000, 0.84],
+                        backgroundColor: [
+                            'rgba(233, 30, 99, 0.7)',
+                            'rgba(156, 39, 176, 0.7)',
+                            'rgba(255, 193, 7, 0.7)'
+                        ]
+                    }]
+                },
+                options: commonBarOptions('Conversion')
+            });
+
+            // Scroll to top button logic
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            window.onscroll = function() {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                    scrollTopBtn.classList.add('show');
+                } else {
+                    scrollTopBtn.classList.remove('show');
+                }
+            };
+            scrollTopBtn.onclick = function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            // Sticky nav hide on scroll
+            let lastScrollTop = 0;
+            const navbar = document.getElementById('header-nav-container');
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop > lastScrollTop && scrollTop > 100) { // scroll down
+                    navbar.classList.add('nav-hidden');
+                } else { // scroll up
+                    navbar.classList.remove('nav-hidden');
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+            }, false);
+        });
+    </script>
+</head>
+<body>
+    <div id="header-nav-container">
+        <div class="nav-content">
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span>Belleza al Día</span>
+            </div>
+            <nav id="main-nav">
+                <div class="nav-wrapper">
+                        <button class="tab tab-active" onclick="changeTab(event, 'resumen')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                            Resumen
+                        </button>
+                        <button class="tab" onclick="changeTab(event, 'presupuesto')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><line x1="21.19" y1="21.19" x2="18.36" y2="18.36"/><line x1="18.36" y1="5.64" x2="21.19" y2="2.81"/><line x1="5.64" y1="18.36" x2="2.81" y2="21.19"/><line x1="2.81" y1="2.81" x2="5.64" y2="5.64"/></svg>
+                            Presupuesto
+                        </button>
+                        <button class="tab" onclick="changeTab(event, 'kpis')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20V16"/></svg>
+                            KPIs
+                        </button>
+                        <button class="tab" onclick="changeTab(event, 'calendario')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                            Calendario
+                        </button>
+                        <button class="tab" onclick="changeTab(event, 'plantillas')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            Anexos
+                        </button>
+                        <button class="tab" onclick="changeTab(event, 'normativa')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                            Normativa
+                        </button>
+                        <button class="tab" onclick="changeTab(event, 'informe')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                            Informes
+                        </button>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl">
+        
+        <header>
+            <h1>Estrategia Integradora de Monitorización</h1>
+            <p>Belleza al Día: Cosmética Natural y Orgánica</p>
+        </header>
+
+        <main>
+            <!-- RESUMEN EJECUTIVO -->
+            <div id="resumen" class="tab-content">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">✨ Resumen de la Estrategia</h2>
+                    <p class="mb-8 text-lg leading-relaxed" style="color: var(--text-gray);">
+                        Esta estrategia integral busca posicionar a <strong style="color: var(--primary-pink);">"Belleza al Día"</strong> en el mercado digital colombiano, capitalizando el crecimiento del 23% anual en cosmética natural. Con un presupuesto de <span class="font-bold" style="color: var(--secondary-purple);">$7.000.000 COP</span> y una duración de 1 mes, la campaña se enfoca en maximizar conversiones, generar leads cualificados y fortalecer el reconocimiento de marca.
+                    </p>
+                    
+                    <h3 class="text-3xl font-bold mb-6">🎯 Proyección de Resultados</h3>
+                    <div class="kpi-grid-container">
+                        <div class="kpi-card">
+                            <p>Leads Generados</p>
+                            <p>170</p>
+                        </div>
+                        <div class="kpi-card">
+                            <p>Costo por Lead (CPL)</p>
+                            <p>$23k</p>
+                        </div>
+                        <div class="kpi-card">
+                            <p>Clientes Nuevos</p>
+                            <p>43</p>
+                        </div>
+                        <div class="kpi-card">
+                            <p>ROAS (1ra Compra)</p>
+                            <p>0.84:1</p>
+                        </div>
+                        <div class="kpi-card">
+                            <p>Ingresos de Campaña</p>
+                            <p>$3.87M</p>
+                        </div>
+                        <div class="kpi-card">
+                            <p>LTV:CAC (12 meses)</p>
+                            <p>3:1</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-3xl font-bold mb-6">💎 Pilares Estratégicos</h3>
+                    <div class="pilar-card-container">
+                        <div class="pilar-card">
+                            <div class="pilar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14.5A2.5 2.5 0 0 0 14.5 12a2.5 2.5 0 0 0-2.5-2.5A2.5 2.5 0 0 0 9.5 12a2.5 2.5 0 0 0 2.5 2.5Z"/><path d="M12 3a9 9 0 0 0 9 9 9 9 0 0 0-9 9 9 9 0 0 0-9-9 9 9 0 0 0 9-9Z"/></svg>
+                            </div>
+                            <div>
+                                <h4>Enfoque Multicanal Integrado</h4>
+                                <p>Sinergia entre Meta, Google, TikTok y Email Marketing.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="pilar-card">
+                            <div class="pilar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M16 20h.01"/><path d="M20 20h.01"/><path d="M4 20h.01"/><path d="M8 20h.01"/><path d="M18 4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+                            </div>
+                            <div>
+                                <h4>Contenido Orientado al Valor</h4>
+                                <p>Contenido educativo (70%), de comunidad (20%) y promocional (10%).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="pilar-card">
+                            <div class="pilar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20V16"/></svg>
+                            </div>
+                            <div>
+                                <h4>Optimización Basada en Datos</h4>
+                                <p>Testing A/B continuo y reasignación dinámica del presupuesto.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="pilar-card">
+                            <div class="pilar-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+                            </div>
+                            <div>
+                                <h4>Cumplimiento Normativo Estricto</h4>
+                                <p>Protección de datos y transparencia como ventaja competitiva.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRESUPUESTO -->
+            <div id="presupuesto" class="tab-content" style="display:none;">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">💰 Plan de Medios: $7.000.000 COP</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        <div class="flex flex-col items-center">
+                            <h3 class="text-2xl font-bold mb-4 text-center" style="color: var(--secondary-purple);">Distribución Estratégica</h3>
+                            <div class="w-full max-w-md">
+                                <canvas id="budgetChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-2xl font-bold mb-6" style="color: var(--secondary-purple);">Inversión por Canal</h3>
+                            <div class="space-y-4">
+                                <div class="p-5 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(233, 30, 99, 0.15);">
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-bold" style="color: var(--primary-pink);">Meta Ads (FB+IG)</span>
+                                        <span class="font-bold" style="color: var(--primary-pink);">$2.400.000 (34.3%)</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div style="width: 34.3%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-5 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(156, 39, 176, 0.15);">
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-bold" style="color: var(--secondary-purple);">Producción de Contenido</span>
+                                        <span class="font-bold" style="color: var(--secondary-purple);">$1.400.000 (20.0%)</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div style="width: 20%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-5 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(255, 193, 7, 0.15);">
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-bold" style="color: var(--accent-gold-light);">Google Ads</span>
+                                        <span class="font-bold" style="color: var(--accent-gold-light);">$1.400.000 (20.0%)</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div style="width: 20%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-5 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(233, 30, 99, 0.15);">
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-bold" style="color: #D81B60;">TikTok Ads</span>
+                                        <span class="font-bold" style="color: #D81B60;">$800.000 (11.4%)</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div style="width: 11.4%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-5 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(156, 39, 176, 0.15);">
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-bold" style="color: #8E24AA;">Otros (CRM, Analítica, etc.)</span>
+                                        <span class="font-bold" style="color: #8E24AA;">$1.000.000 (14.3%)</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div style="width: 14.3%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPIS -->
+            <div id="kpis" class="tab-content" style="display:none;">
+                <div>
+                    <h2 class="text-4xl font-bold mb-8">📊 Dashboard de KPIs por Fase del Embudo</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(233, 30, 99, 0.15);">
+                            <div style="height: 300px;">
+                                <canvas id="kpiAwareness"></canvas>
+                            </div>
+                        </div>
+                        <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(156, 39, 176, 0.15);">
+                            <div style="height: 300px;">
+                                <canvas id="kpiActivation"></canvas>
+                            </div>
+                        </div>
+                        <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(255, 193, 7, 0.15);">
+                            <div style="height: 300px;">
+                                <canvas id="kpiConversion"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CALENDARIO -->
+            <div id="calendario" class="tab-content" style="display:none;">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">📅 Calendario de Contenidos Mensual</h2>
+                    <div class="flex flex-col md:flex-row justify-around text-center mb-8 space-y-4 md:space-y-0 gap-4">
+                        <div class="p-6 rounded-2xl flex-1" style="background: linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(233, 30, 99, 0.05) 100%); border: 2px solid rgba(233, 30, 99, 0.2);">
+                            <p class="font-bold text-xl mb-1" style="color: var(--primary-pink);">Semana 1</p>
+                            <p class="text-sm font-semibold" style="color: var(--text-gray);">AWARENESS</p>
+                        </div>
+                        <div class="p-6 rounded-2xl flex-1" style="background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%); border: 2px solid rgba(156, 39, 176, 0.2);">
+                            <p class="font-bold text-xl mb-1" style="color: var(--secondary-purple);">Semanas 2-3</p>
+                            <p class="text-sm font-semibold" style="color: var(--text-gray);">CONSIDERACIÓN</p>
+                        </div>
+                        <div class="p-6 rounded-2xl flex-1" style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%); border: 2px solid rgba(255, 193, 7, 0.2);">
+                            <p class="font-bold text-xl mb-1" style="color: var(--accent-gold-light);">Semana 4</p>
+                            <p class="text-sm font-semibold" style="color: var(--text-gray);">CONVERSIÓN</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <nav class="flex space-x-2 rounded-2xl p-2" style="background: rgba(255, 255, 255, 0.5);" aria-label="Tabs">
+                            <button onclick="changeSubTab(event, 'cal-instagram')" class="sub-tab sub-tab-active flex-1 text-center py-3 px-2 rounded-xl">Instagram</button>
+                            <button onclick="changeSubTab(event, 'cal-facebook')" class="sub-tab flex-1 text-center py-3 px-2 rounded-xl">Facebook</button>
+                            <button onclick="changeSubTab(event, 'cal-tiktok')" class="sub-tab flex-1 text-center py-3 px-2 rounded-xl">TikTok</button>
+                            <button onclick="changeSubTab(event, 'cal-blog')" class="sub-tab flex-1 text-center py-3 px-2 rounded-xl">Blog</button>
+                        </nav>
+                    </div>
+
+                    <div id="cal-instagram" class="sub-tab-content">
+                        <h3 class="text-2xl font-bold mb-4" style="color: var(--primary-pink);">Plan de Contenidos - Instagram</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <th colspan="4" class="px-6 py-4 text-center text-white" style="background: linear-gradient(135deg, #E91E63 0%, #9C27B0 100%);">Semana 1: Awareness</th>
+                                    </tr>
+                                    <tr style="background: rgba(233, 30, 99, 0.1);">
+                                        <th class="px-6 py-3 font-bold" style="color: var(--text-dark);">Día</th>
+                                        <th class="px-6 py-3 font-bold" style="color: var(--text-dark);">Formato</th>
+                                        <th class="px-6 py-3 font-bold" style="color: var(--text-dark);">Contenido</th>
+                                        <th class="px-6 py-3 font-bold" style="color: var(--text-dark);">CTA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Lunes</td>
+                                        <td class="px-6 py-4">Feed+Story</td>
+                                        <td class="px-6 py-4">Lanzamiento "Belleza Consciente"</td>
+                                        <td class="px-6 py-4">"Descubre más"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.3);">
+                                        <td class="px-6 py-4 font-semibold">Martes</td>
+                                        <td class="px-6 py-4">Reel</td>
+                                        <td class="px-6 py-4">Tutorial rutina facial matutina</td>
+                                        <td class="px-6 py-4">"Guarda para tu rutina"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Miércoles</td>
+                                        <td class="px-6 py-4">Story</td>
+                                        <td class="px-6 py-4">Encuesta: "¿Qué buscas en tu maquillaje?"</td>
+                                        <td class="px-6 py-4">"Vota ahora"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.3);">
+                                        <td class="px-6 py-4 font-semibold">Jueves</td>
+                                        <td class="px-6 py-4">Feed</td>
+                                        <td class="px-6 py-4">Testimonio cliente real (UGC)</td>
+                                        <td class="px-6 py-4">"Lee más testimonios"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Viernes</td>
+                                        <td class="px-6 py-4">Reel</td>
+                                        <td class="px-6 py-4">"5 razones para elegir cosmética natural"</td>
+                                        <td class="px-6 py-4">"Comparte"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.3);">
+                                        <td class="px-6 py-4 font-semibold">Sábado</td>
+                                        <td class="px-6 py-4">Feed</td>
+                                        <td class="px-6 py-4">Colección cuidado capilar</td>
+                                        <td class="px-6 py-4">"Desliza y enamórate"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Domingo</td>
+                                        <td class="px-6 py-4">Story</td>
+                                        <td class="px-6 py-4">Behind the scenes: producción</td>
+                                        <td class="px-6 py-4">"Swipe up"</td>
+                                    </tr>
+                                </tbody>
+                                <thead>
+                                    <tr>
+                                        <th colspan="4" class="px-6 py-4 text-center text-white" style="background: linear-gradient(135deg, #9C27B0 0%, #E91E63 100%);">Semanas 2 y 3: Consideración</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Lunes</td>
+                                        <td class="px-6 py-4">Feed</td>
+                                        <td class="px-6 py-4">Producto destacado: Serum Vitamina C</td>
+                                        <td class="px-6 py-4">"Conoce sus beneficios"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.3);">
+                                        <td class="px-6 py-4 font-semibold">Martes</td>
+                                        <td class="px-6 py-4">Reel</td>
+                                        <td class="px-6 py-4">Tutorial: "Cómo aplicar tu contorno de ojos"</td>
+                                        <td class="px-6 py-4">"Guarda este tip"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Miércoles</td>
+                                        <td class="px-6 py-4">Feed</td>
+                                        <td class="px-6 py-4">Educativo: "Beneficios del ácido hialurónico"</td>
+                                        <td class="px-6 py-4">"¿Lo sabías?"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.3);">
+                                        <td class="px-6 py-4 font-semibold">Jueves</td>
+                                        <td class="px-6 py-4">Story</td>
+                                        <td class="px-6 py-4">Quiz: "Descubre tu tipo de piel"</td>
+                                        <td class="px-6 py-4">"Participa aquí"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Viernes</td>
+                                        <td class="px-6 py-4">Reel</td>
+                                        <td class="px-6 py-4">Tendencia: "GRWM (Get Ready With Me)"</td>
+                                        <td class="px-6 py-4">"Comenta tu producto fav"</td>
+                                    </tr>
+                                </tbody>
+                                <thead>
+                                    <tr>
+                                        <th colspan="4" class="px-6 py-4 text-center text-white" style="background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%);">Semana 4: Conversión</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Lunes</td>
+                                        <td class="px-6 py-4">Feed</td>
+                                        <td class="px-6 py-4">¡Oferta Flash! 24h de envío gratis</td>
+                                        <td class="px-6 py-4">"Compra ahora"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.3);">
+                                        <td class="px-6 py-4 font-semibold">Martes</td>
+                                        <td class="px-6 py-4">Reel</td>
+                                        <td class="px-6 py-4">Unboxing kit "Esenciales de Belleza"</td>
+                                        <td class="px-6 py-4">"Link en bio para el tuyo"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Miércoles</td>
+                                        <td class="px-6 py-4">Story</td>
+                                        <td class="px-6 py-4">Countdown: Últimas horas de la oferta</td>
+                                        <td class="px-6 py-4">"No te quedes sin el tuyo"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.3);">
+                                        <td class="px-6 py-4 font-semibold">Jueves</td>
+                                        <td class="px-6 py-4">Feed</td>
+                                        <td class="px-6 py-4">Resultados: Antes y Después de 30 días</td>
+                                        <td class="px-6 py-4">"Inicia tu cambio hoy"</td>
+                                    </tr>
+                                    <tr style="background: rgba(255, 255, 255, 0.5);">
+                                        <td class="px-6 py-4 font-semibold">Viernes</td>
+                                        <td class="px-6 py-4">Reel</td>
+                                        <td class="px-6 py-4">Recordatorio oferta + código de descuento</td>
+                                        <td class="px-6 py-4">"Usa el código BELLEZA20"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="cal-facebook" class="sub-tab-content" style="display:none;">
+                        <h3 class="text-2xl font-bold mb-4" style="color: var(--secondary-purple);">Plan de Contenidos - Facebook</h3>
+                        <div class="grid gap-4">
+                            <div class="p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(233, 30, 99, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%); border: 2px solid rgba(233, 30, 99, 0.2);">
+                                <h4 class="font-bold text-lg mb-3" style="color: var(--primary-pink);">📚 Contenido Educativo</h4>
+                                <p style="color: var(--text-gray);">2 publicaciones semanales con enlaces al blog sobre ingredientes naturales, rutinas de skincare y beneficios de la cosmética orgánica.</p>
+                            </div>
+                            <div class="p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(156, 39, 176, 0.05) 0%, rgba(233, 30, 99, 0.05) 100%); border: 2px solid rgba(156, 39, 176, 0.2);">
+                                <h4 class="font-bold text-lg mb-3" style="color: var(--secondary-purple);">🎥 Videos Nativos</h4>
+                                <p style="color: var(--text-gray);">1 video semanal con tutoriales, tips de aplicación y demostraciones de productos para maximizar el engagement orgánico.</p>
+                            </div>
+                            <div class="p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.05) 0%, rgba(255, 152, 0, 0.05) 100%); border: 2px solid rgba(255, 193, 7, 0.2);">
+                                <h4 class="font-bold text-lg mb-3" style="color: var(--accent-gold-light);">💬 Contenido de Comunidad</h4>
+                                <p style="color: var(--text-gray);">Preguntas, encuestas y testimonios para fomentar conversación e interacción con la audiencia.</p>
+                            </div>
+                            <div class="p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(233, 30, 99, 0.05) 0%, rgba(233, 30, 99, 0.1) 100%); border: 2px solid rgba(233, 30, 99, 0.3);">
+                                <h4 class="font-bold text-lg mb-3" style="color: #C2185B;">🎁 Contenido Promocional</h4>
+                                <p style="color: var(--text-gray);">1 publicación semanal con ofertas, productos destacados y llamados a la acción directos.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cal-tiktok" class="sub-tab-content" style="display:none;">
+                        <h3 class="text-2xl font-bold mb-4" style="color: var(--primary-pink);">Plan de Contenidos - TikTok</h3>
+                        <div class="space-y-4">
+                            <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(233, 30, 99, 0.2);">
+                                <div class="flex items-center mb-3">
+                                    <span class="font-bold text-2xl mr-3" style="color: var(--primary-pink);">🎬</span>
+                                    <h4 class="font-bold text-lg" style="color: var(--text-dark);">Semana 1: POV & Mitos</h4>
+                                </div>
+                                <ul class="list-disc ml-8 space-y-2" style="color: var(--text-gray);">
+                                    <li>POV: "Mi piel después de cambiar a cosmética natural"</li>
+                                    <li>Mito vs. Realidad: "Los parabenos son malos"</li>
+                                    <li>Audio en tendencia mostrando textura de productos</li>
+                                </ul>
+                                <p class="mt-3 text-sm font-semibold" style="color: var(--secondary-purple);">Hashtags: #BellezaNatural #SkincareColombiano</p>
+                            </div>
+                            
+                            <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(156, 39, 176, 0.2);">
+                                <div class="flex items-center mb-3">
+                                    <span class="font-bold text-2xl mr-3" style="color: var(--secondary-purple);">✨</span>
+                                    <h4 class="font-bold text-lg" style="color: var(--text-dark);">Semana 2: Rutinas ASMR</h4>
+                                </div>
+                                <ul class="list-disc ml-8 space-y-2" style="color: var(--text-gray);">
+                                    <li>Rutina de noche ASMR con productos</li>
+                                    <li>"3 productos que cambiarán tu piel en 30 días"</li>
+                                    <li>Dueto a dermatólogo hablando de ingredientes</li>
+                                </ul>
+                                <p class="mt-3 text-sm font-semibold" style="color: var(--secondary-purple);">Hashtags: #SkincareRoutine #BellezaConsciente</p>
+                            </div>
+                            
+                            <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(255, 193, 7, 0.2);">
+                                <div class="flex items-center mb-3">
+                                    <span class="font-bold text-2xl mr-3" style="color: var(--accent-gold-light);">💄</span>
+                                    <h4 class="font-bold text-lg" style="color: var(--text-dark);">Semana 3: Challenges & Educación</h4>
+                                </div>
+                                <ul class="list-disc ml-8 space-y-2" style="color: var(--text-gray);">
+                                    <li>Challenge: Maquillaje completo con productos Belleza al Día</li>
+                                    <li>Ingredientes que SÍ funcionan para el acné</li>
+                                    <li>Transición antes/después de usar productos</li>
+                                </ul>
+                                <p class="mt-3 text-sm font-semibold" style="color: var(--secondary-purple);">Hashtags: #GlowUp #CuidadoDeLaPiel</p>
+                            </div>
+                            
+                            <div class="p-6 rounded-2xl" style="background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(233, 30, 99, 0.2);">
+                                <div class="flex items-center mb-3">
+                                    <span class="font-bold text-2xl mr-3" style="color: var(--primary-pink);">⭐</span>
+                                    <h4 class="font-bold text-lg" style="color: var(--text-dark);">Semana 4: Reviews & Resultados</h4>
+                                </div>
+                                <ul class="list-disc ml-8 space-y-2" style="color: var(--text-gray);">
+                                    <li>Review honesta de producto bestseller</li>
+                                    <li>Empacando pedido con código de descuento</li>
+                                    <li>Antes y después real de clienta</li>
+                                </ul>
+                                <p class="mt-3 text-sm font-semibold" style="color: var(--secondary-purple);">Hashtags: #BeautyReview #ResultadosReales</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cal-blog" class="sub-tab-content" style="display:none;">
+                        <h3 class="text-2xl font-bold mb-6" style="color: var(--secondary-purple);">Plan de Contenidos - Blog (4 artículos/mes)</h3>
+                        <div class="space-y-4">
+                            <div class="p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%); border-left: 5px solid var(--primary-pink);">
+                                <div class="flex items-start">
+                                    <span class="font-bold text-3xl mr-4" style="color: var(--primary-pink);">1</span>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2" style="color: var(--text-dark);">Semana 1: Guía completa cosmética natural certificada en Colombia</h4>
+                                        <p class="text-sm mb-2" style="color: var(--text-gray);">1,500 palabras | Objetivo: Tráfico orgánico SEO</p>
+                                        <p style="color: var(--text-gray);">Artículo pillar que explica certificaciones, ingredientes permitidos y cómo identificar productos genuinamente naturales en el mercado colombiano.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%); border-left: 5px solid var(--secondary-purple);">
+                                <div class="flex items-start">
+                                    <span class="font-bold text-3xl mr-4" style="color: var(--secondary-purple);">2</span>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2" style="color: var(--text-dark);">Semana 2: Rutina de skincare para piel grasa con productos naturales</h4>
+                                        <p class="text-sm mb-2" style="color: var(--text-gray);">1,200 palabras | Objetivo: Captar audiencia específica</p>
+                                        <p style="color: var(--text-gray);">Tutorial paso a paso con recomendaciones de productos naturales específicos para controlar sebo, reducir poros y prevenir acné.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%); border-left: 5px solid var(--accent-gold);">
+                                <div class="flex items-start">
+                                    <span class="font-bold text-3xl mr-4" style="color: var(--accent-gold-light);">3</span>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2" style="color: var(--text-dark);">Semana 3: Ingredientes tóxicos a evitar en tu maquillaje</h4>
+                                        <p class="text-sm mb-2" style="color: var(--text-gray);">1,800 palabras | Objetivo: Posicionamiento autoridad</p>
+                                        <p style="color: var(--text-gray);">Lista detallada de ingredientes peligrosos con evidencia científica y alternativas naturales seguras para cada uno.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%); border-left: 5px solid var(--primary-pink);">
+                                <div class="flex items-start">
+                                    <span class="font-bold text-3xl mr-4" style="color: var(--primary-pink);">4</span>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2" style="color: var(--text-dark);">Semana 4: Belleza sostenible - El impacto ambiental de tu rutina</h4>
+                                        <p class="text-sm mb-2" style="color: var(--text-gray);">1,400 palabras | Objetivo: Conectar con valores</p>
+                                        <p style="color: var(--text-gray);">Análisis del impacto ecológico de productos convencionales vs. naturales, con tips para una rutina eco-friendly.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PLANTILLAS Y ANEXOS -->
+            <div id="plantillas" class="tab-content" style="display:none;">
+                <div class="anexos-container">
+                    <h1 class="text-4xl font-bold mb-3">📦 Generador de Anexos</h1>
+                    <p class="text-lg mb-8" style="color: var(--text-gray);">Estrategia de Marketing Digital - Belleza al Día</p>
+                    
+                    <div class="anexos-info-box">
+                        <h3 class="text-2xl font-bold mb-3">🎯 ¿Qué hace esta herramienta?</h3>
+                        <p class="mb-3" style="color: var(--text-gray);">Genera y descarga automáticamente los 14 anexos de la estrategia en formatos listos para usar:</p>
+                        <ul class="list-disc ml-8 space-y-2" style="color: var(--text-gray);">
+                            <li><strong>CSV:</strong> Para abrir en Excel o Google Sheets</li>
+                            <li><strong>TXT:</strong> Contenido estructurado listo para copiar</li>
+                            <li><strong>HTML:</strong> Documentos formateados</li>
+                            <li><strong>JS:</strong> Códigos de implementación</li>
+                        </ul>
+                    </div>
+
+                    <div class="anexos-instructions">
+                        <h3 class="text-2xl font-bold mb-3">📋 Instrucciones de Uso</h3>
+                        <ol class="list-decimal ml-8 space-y-2">
+                            <li>Haz clic en el botón de cada anexo para descargarlo individualmente.</li>
+                            <li>O usa el botón "Descargar Todos" para obtener todos los anexos de una vez.</li>
+                            <li>Los archivos CSV se abren directamente en Excel o Google Sheets.</li>
+                            <li>Los archivos TXT contienen instrucciones y contenido listo para copiar/pegar.</li>
+                            <li>Guarda los archivos en una carpeta organizada.</li>
+                        </ol>
+                    </div>
+
+                    <h2 class="text-3xl font-bold mb-8" style="color: var(--text-dark);">Anexos Disponibles</h2>
+                    
+                    <div class="anexos-grid">
+                        <div class="anexo-card">
+                            <span class="type">CSV / Excel</span>
+                            <h3>📅 Anexo A</h3>
+                            <p>Calendario de Actuación (30 días) - Plantilla completa con 120+ publicaciones programadas.</p>
+                            <button class="download-btn" onclick="descargarAnexoA()">⬇️ Descargar Calendario</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">CSV / Excel</span>
+                            <h3>💰 Anexo B</h3>
+                            <p>Presupuesto Detallado - Desglose completo de $7.000.000 COP por canal y semana.</p>
+                            <button class="download-btn" onclick="descargarAnexoB()">⬇️ Descargar Presupuesto</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">TXT / PDF</span>
+                            <h3>📊 Anexo C</h3>
+                            <p>Guía de KPIs - 50+ métricas con fórmulas y metas definidas.</p>
+                            <button class="download-btn" onclick="descargarAnexoC()">⬇️ Descargar KPIs</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">TXT / Template</span>
+                            <h3>📈 Anexo D</h3>
+                            <p>Plantilla Reporte Semanal - Estructura de 12 slides con métricas.</p>
+                            <button class="download-btn" onclick="descargarAnexoD()">⬇️ Descargar Reporte Semanal</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">TXT / Template</span>
+                            <h3>📊 Anexo E</h3>
+                            <p>Plantilla Reporte Final - Reporte ejecutivo completo (20+ slides).</p>
+                            <button class="download-btn" onclick="descargarAnexoE()">⬇️ Descargar Reporte Final</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">CSV / Excel</span>
+                            <h3>👥 Anexo F</h3>
+                            <p>CRM de Leads - Base de datos con 25+ campos y fórmulas automáticas.</p>
+                            <button class="download-btn" onclick="descargarAnexoF()">⬇️ Descargar CRM</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">HTML / TXT</span>
+                            <h3>⚖️ Anexo G</h3>
+                            <p>Textos Legales - Políticas de datos, términos y condiciones (7 documentos).</p>
+                            <button class="download-btn" onclick="descargarAnexoG()">⬇️ Descargar Legales</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">JS / HTML</span>
+                            <h3>🔧 Anexo H</h3>
+                            <p>Códigos de Tracking - GA4, Meta Pixel, GTM, TikTok listos para copiar.</p>
+                            <button class="download-btn" onclick="descargarAnexoH()">⬇️ Descargar Códigos</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">TXT</span>
+                            <h3>🎨 Anexo I</h3>
+                            <p>Guía de Creatividades - Especificaciones técnicas por canal.</p>
+                            <button class="download-btn" onclick="descargarAnexoI()">⬇️ Descargar Guía</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">CSV / Excel</span>
+                            <h3>✅ Anexo J</h3>
+                            <p>Checklist Implementación - 100+ ítems verificables pre-lanzamiento.</p>
+                            <button class="download-btn" onclick="descargarAnexoJ()">⬇️ Descargar Checklist</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">TXT</span>
+                            <h3>📊 Anexo K</h3>
+                            <p>Instrucciones Dashboard - Guía para Looker Studio y configuración.</p>
+                            <button class="download-btn" onclick="descargarAnexoK()">⬇️ Descargar Instrucciones</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">TXT</span>
+                            <h3>✍️ Anexo L</h3>
+                            <p>Copies y Guiones - 100+ textos para posts, ads y videos.</p>
+                            <button class="download-btn" onclick="descargarAnexoL()">⬇️ Descargar Contenidos</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">CSV / Excel</span>
+                            <h3>📉 Anexo M</h3>
+                            <p>Benchmarks - Datos de referencia de la industria por métrica.</p>
+                            <button class="download-btn" onclick="descargarAnexoM()">⬇️ Descargar Benchmarks</button>
+                        </div>
+                        
+                        <div class="anexo-card">
+                            <span class="type">HTML</span>
+                            <h3>🔗 Anexo N</h3>
+                            <p>Recursos y Enlaces - Links útiles, herramientas y referencias.</p>
+                            <button class="download-btn" onclick="descargarAnexoN()">⬇️ Descargar Recursos</button>
+                        </div>
+                    </div>
+                    
+                    <button class="download-all" onclick="descargarTodos()">
+                        📦 Descargar Todos los Anexos (14 archivos)
+                    </button>
+                </div>
+            </div>
+
+            <!-- NORMATIVA -->
+            <div id="normativa" class="tab-content" style="display:none;">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">⚖️ Marco Normativo Aplicable en Colombia</h2>
+                    <p class="mb-8 text-lg" style="color: var(--text-gray);">El estricto cumplimiento normativo es un pilar de la estrategia, generando confianza y evitando sanciones. A continuación se detallan las principales leyes y decretos aplicables.</p>
+                    
+                    <div class="space-y-4">
+                        <details class="group">
+                            <summary class="flex justify-between items-center font-semibold text-lg cursor-pointer">
+                                Ley 1581 de 2012 - Protección de Datos Personales
+                                <span class="arrow-down">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </summary>
+                            <div class="mt-4 pl-4 border-l-4" style="border-color: var(--primary-pink); color: var(--text-gray);">
+                                <p class="mb-3">Esta ley regula el tratamiento de datos personales y es de aplicación directa a la campaña. Exige el cumplimiento de principios como <strong>legalidad, finalidad, libertad</strong> (consentimiento previo), <strong>veracidad y seguridad</strong>.</p>
+                                <p>Los titulares tienen derecho a conocer, actualizar, rectificar y suprimir sus datos. Es obligatorio contar con una <strong>Política de Tratamiento de Datos</strong> publicada y accesible.</p>
+                            </div>
+                        </details>
+
+                        <details class="group">
+                            <summary class="flex justify-between items-center font-semibold text-lg cursor-pointer">
+                                Ley 1480 de 2011 - Estatuto del Consumidor
+                                <span class="arrow-down">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </summary>
+                            <div class="mt-4 pl-4 border-l-4" style="border-color: var(--secondary-purple); color: var(--text-gray);">
+                                <p class="mb-3">Aplica al comercio electrónico y exige suministrar <strong>información clara y veraz</strong> sobre productos, precios, costos de envío y tiempos de entrega.</p>
+                                <p>Establece el <strong>derecho de retracto de 5 días hábiles</strong> para el consumidor en compras a distancia. La publicidad no puede ser engañosa ni omitir información relevante.</p>
+                            </div>
+                        </details>
+
+                        <details class="group">
+                            <summary class="flex justify-between items-center font-semibold text-lg cursor-pointer">
+                                Normativa Sanitaria (INVIMA) y Publicidad
+                                <span class="arrow-down">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </summary>
+                            <div class="mt-4 pl-4 border-l-4" style="border-color: var(--accent-gold); color: var(--text-gray);">
+                                <p class="mb-3">Los productos cosméticos requieren <strong>Notificación Sanitaria Obligatoria (NSO)</strong> ante INVIMA. La publicidad no puede atribuir propiedades curativas o terapéuticas y debe estar sustentada.</p>
+                                <p>El etiquetado debe incluir <strong>lista de ingredientes (INCI), lote, vencimiento y número de NSO</strong>. Las afirmaciones sobre beneficios deben tener respaldo científico.</p>
+                            </div>
+                        </details>
+
+                        <details class="group">
+                            <summary class="flex justify-between items-center font-semibold text-lg cursor-pointer">
+                                Cookies y Rastreo Digital
+                                <span class="arrow-down">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </summary>
+                            <div class="mt-4 pl-4 border-l-4" style="border-color: var(--primary-pink); color: var(--text-gray);">
+                                <p class="mb-3">Aunque no hay una ley específica de cookies, la recolección de datos mediante cookies (IP, comportamiento) se rige por la <strong>Ley 1581</strong>.</p>
+                                <p>Se recomienda un <strong>banner de cookies</strong> que permita al usuario aceptar o rechazar las cookies no esenciales (analíticas y publicitarias), cumpliendo con estándares internacionales como GDPR.</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INFORMES -->
+            <div id="informe" class="tab-content" style="display:none;">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">📄 Informes de la Estrategia</h2>
+                    
+                    <div class="mb-6">
+                        <nav class="flex space-x-2 rounded-2xl p-2" style="background: rgba(255, 255, 255, 0.5);" aria-label="Tabs">
+                            <button onclick="changeSubTab(event, 'informe-resumen')" class="sub-tab sub-tab-active flex-1 text-center py-3 px-2 rounded-xl">Resumen del Informe</button>
+                            <button onclick="changeSubTab(event, 'informe-completo')" class="sub-tab flex-1 text-center py-3 px-2 rounded-xl">Informe Completo (PDF)</button>
+                        </nav>
+                    </div>
+
+                    <div id="informe-resumen" class="sub-tab-content">
+                        <div class="flex justify-end mb-4">
+                            <button onclick="startPdfDownload('1Pk8uNR4DzORi6Mj2UjQx5G_wwXMsMSsO', 'Resumen_Estrategia.pdf')" class="download-btn" style="width: auto; padding: 1rem 2rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-2">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                                Descargar Resumen (.pdf)
+                            </button>
+                        </div>
+                        
+                        <div class="report-content border-2 rounded-2xl p-6 md:p-8 h-[70vh] overflow-y-auto space-y-6" style="background: rgba(255, 255, 255, 0.6); border-color: rgba(233, 30, 99, 0.2);">
+                            
+                            <!-- NEW CONTENT START -->
+                            <div>
+                                <h4 class="text-xl font-bold mb-3" style="color: var(--text-dark);">Contexto del Proyecto</h4>
+                                <p style="color: var(--text-gray); line-height: 1.8;">Belleza al Día es una empresa colombiana especializada en cosmética natural y orgánica que busca expandir su presencia digital y convertir audiencias interesadas en productos sostenibles en clientes activos. El mercado colombiano de belleza natural ha experimentado un crecimiento del 23% anual según la Cámara de Cosméticos de la ANDI (2023), impulsado por consumidores conscientes, principalmente mujeres de 25-45 años de estratos 3-5, que priorizan ingredientes naturales, trazabilidad y sostenibilidad.</p>
+                            </div>
+                    
+                            <div>
+                                <h4 class="text-xl font-bold mb-3" style="color: var(--text-dark);">Objetivo General</h4>
+                                <p style="color: var(--text-gray); line-height: 1.8;">Diseñar, presupuestar y documentar una estrategia integradora de monitorización para una campaña digital de 1 mes que maximice conversiones, genere bases de datos cualificadas, incremente el reconocimiento de marca y potencie las ventas directas, todo dentro de un presupuesto máximo de $7.000.000 COP.</p>
+                            </div>
+                    
+                            <div>
+                                <h4 class="text-xl font-bold mb-3" style="color: var(--text-dark);">Presupuesto del Plan de Medios</h4>
+                                <p class="mb-4" style="color: var(--text-gray); line-height: 1.8;">El presupuesto total de $7.000.000 COP se distribuye estratégicamente para equilibrar la inversión en medios pagados, la producción de contenido, herramientas, y un fondo para optimización y contingencia.</p>
+                                <p class="font-semibold text-center my-4" style="color: var(--text-dark);">Tabla 1</p>
+                                <p class="italic text-center -mt-3 mb-4" style="color: var(--text-dark);">Presupuesto General por Canal</p>
+                                <div class="overflow-x-auto">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Canal/Concepto</th>
+                                                <th>Monto Asignado</th>
+                                                <th>Porcentaje del Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>META ADS (FB + IG)</td><td>$2,400,000</td><td>34.3%</td></tr>
+                                            <tr><td>GOOGLE ADS</td><td>$1,400,000</td><td>20.0%</td></tr>
+                                            <tr><td>TIKTOK ADS</td><td>$800,000</td><td>11.4%</td></tr>
+                                            <tr><td>Producción Contenidos</td><td>$1,400,000</td><td>20.0%</td></tr>
+                                            <tr><td>Email Marketing + CRM</td><td>$350,000</td><td>5.0%</td></tr>
+                                            <tr><td>Herramientas Analítica</td><td>$280,000</td><td>4.0%</td></tr>
+                                            <tr><td>Reserva Optimización</td><td>$350,000</td><td>5.0%</td></tr>
+                                            <tr><td>Contingencia</td><td>$20,000</td><td>0.3%</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="text-sm mt-3" style="color: var(--text-gray);"><em>Nota.</em> La distribución prioriza los canales de mayor rendimiento para el público objetivo, asegurando fondos para contenido de calidad y flexibilidad para optimizar la campaña en tiempo real.</p>
+                            </div>
+
+                            <div>
+                                <h4 class="text-xl font-bold mb-3" style="color: var(--text-dark);">Calendario de Actuación</h4>
+                                <p class="mb-4" style="color: var(--text-gray); line-height: 1.8;">El plan de contenidos se despliega a lo largo de un mes, con fases temáticas por semana para guiar al consumidor a través del embudo de conversión, desde el reconocimiento de la marca hasta la compra final.</p>
+                                
+                                <h5 class="text-lg font-bold mt-6 mb-3" style="color: var(--secondary-purple);">Instagram</h5>
+                                <p class="mb-4" style="color: var(--text-gray); line-height: 1.8;">Se realizarán 7 publicaciones semanales, combinando formatos de Feed, Reels y Stories para maximizar el alcance y la interacción.</p>
+                                <p class="font-semibold text-center my-4" style="color: var(--text-dark);">Tabla 2</p>
+                                <p class="italic text-center -mt-3 mb-4" style="color: var(--text-dark);">Plan de Contenidos Mensual para Instagram</p>
+                                <div class="overflow-x-auto">
+                                    <table>
+                                        <thead><tr><th>Semana</th><th>Lunes</th><th>Miércoles</th><th>Viernes</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>1 (Awareness)</td><td>Lanzamiento "Belleza Consciente"</td><td>Encuesta en Story</td><td>Reel: 5 razones pro-natural</td></tr>
+                                            <tr><td>2 (Consideración)</td><td>Producto destacado: Serum</td><td>Educativo: Ácido Hialurónico</td><td>Reel: "Get Ready With Me"</td></tr>
+                                            <tr><td>3 (Consideración)</td><td>UGC: Repost de cliente</td><td>Quiz: "Descubre tu piel"</td><td>Tutorial: "Contorno de ojos"</td></tr>
+                                            <tr><td>4 (Conversión)</td><td>¡Oferta Flash!</td><td>Countdown de oferta</td><td>Recordatorio con código</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <h5 class="text-lg font-bold mt-6 mb-3" style="color: var(--secondary-purple);">Facebook</h5>
+                                <p class="mb-4" style="color: var(--text-gray); line-height: 1.8;">La estrategia en Facebook se centrará en contenido más informativo y enlaces al blog, con 5 publicaciones semanales.</p>
+                                <p class="font-semibold text-center my-4" style="color: var(--text-dark);">Tabla 3</p>
+                                <p class="italic text-center -mt-3 mb-4" style="color: var(--text-dark);">Estructura Semanal de Contenidos para Facebook</p>
+                                <div class="overflow-x-auto">
+                                    <table>
+                                        <thead><tr><th>Tipo de Contenido</th><th>Frecuencia Semanal</th><th>Ejemplo</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Educativo (Link a Blog)</td><td>2</td><td>"¿Sabes qué ingredientes evitar? Lee nuestro último artículo."</td></tr>
+                                            <tr><td>Video Nativo (Tips)</td><td>1</td><td>Video: "3 formas de usar nuestro aceite facial."</td></tr>
+                                            <tr><td>Comunidad (Pregunta)</td><td>1</td><td>"¿Cuál es el paso de tu rutina que nunca te saltas?"</td></tr>
+                                            <tr><td>Promocional</td><td>1</td><td>"Nuestro bestseller de la semana con 15% OFF."</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <h5 class="text-lg font-bold mt-6 mb-3" style="color: var(--secondary-purple);">TikTok</h5>
+                                <p class="mb-4" style="color: var(--text-gray); line-height: 1.8;">El enfoque será en contenido auténtico y tendencias (10-12 videos/mes) para conectar con una audiencia más joven.</p>
+                                <p class="font-semibold text-center my-4" style="color: var(--text-dark);">Tabla 4</p>
+                                <p class="italic text-center -mt-3 mb-4" style="color: var(--text-dark);">Ideas de Contenido Mensual para TikTok</p>
+                                <div class="overflow-x-auto">
+                                    <table>
+                                        <thead><tr><th>Semana</th><th>Ideas de Contenido (Ejemplos)</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>1</td><td>POV usando cosmética natural; Mito vs. realidad de los parabenos.</td></tr>
+                                            <tr><td>2</td><td>Rutina nocturna ASMR; "3 productos que cambiarán tu piel".</td></tr>
+                                            <tr><td>3</td><td>Challenge: Look solo con productos naturales; Ingredientes que SÍ funcionan.</td></tr>
+                                            <tr><td>4</td><td>Review honesta de productos; Antes y después de 30 días.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-xl font-bold mb-3 mt-8" style="color: var(--text-dark);">Leyes y Regulaciones en el Marketing Digital</h4>
+                                <p class="mb-4" style="color: var(--text-gray); line-height: 1.8;">El desarrollo de actividades de marketing digital y comercio electrónico en Colombia requiere cumplimiento estricto de múltiples regulaciones que protegen tanto a consumidores como a sus datos personales. Belleza al Día implementa protocolos exhaustivos para garantizar adhesión total al marco legal vigente.</p>
+                                <div class="space-y-4 pl-4 border-l-4 border-gray-200">
+                                    <h5 class="text-lg font-bold" style="color: var(--secondary-purple);">Ley 1581 de 2012 - Protección de Datos Personales</h5>
+                                    <p style="color: var(--text-gray); line-height: 1.8;">Esta ley establece el régimen de protección de datos personales en Colombia, siendo aplicable a todas las empresas que recolecten, almacenen o procesen información de ciudadanos colombianos. Belleza al Día implementa: (1) política de privacidad visible y accesible en sitio web, landing pages y formularios; (2) autorización expresa mediante checkbox obligatorio con enlace a política de tratamiento completa; (3) registro de bases de datos ante la Superintendencia de Industria y Comercio (SIC); (4) designación formal de encargado de protección de datos; (5) procedimiento documentado para ejercicio de derechos de habeas data (consulta, rectificación, actualización, supresión) con plazo máximo de respuesta de 15 días hábiles; (6) medidas técnicas de seguridad incluyendo encriptación SSL, acceso restringido y backups periódicos.</p>
+                                    
+                                    <h5 class="text-lg font-bold" style="color: var(--secondary-purple);">Decreto 1377 de 2013</h5>
+                                    <p style="color: var(--text-gray); line-height: 1.8;">Complementa la Ley 1581 estableciendo requisitos específicos: políticas de tratamiento comprensibles para personas sin conocimiento técnico, conservación segura de autorizaciones por período igual al de vigencia del dato, transferencia de datos solo a terceros explícitamente autorizados y capacitación periódica del personal en protección de datos.</p>
+                                    
+                                    <h5 class="text-lg font-bold" style="color: var(--secondary-purple);">Ley 1480 de 2011 - Estatuto del Consumidor</h5>
+                                    <p style="color: var(--text-gray); line-height: 1.8;">Establece derechos fundamentales del consumidor digital: (1) derecho de retracto de 5 días hábiles desde recepción del producto para devolución sin justificación; (2) garantía legal mínima de 1 año para defectos de calidad; (3) derecho a información clara, veraz, y oportuna; (4) reversión del pago en casos de fraude electrónico; (5) prohibición de publicidad engañosa. Belleza al Día implementa política de devoluciones que cumple y supera requisitos legales.</p>
+                                    
+                                    <h5 class="text-lg font-bold" style="color: var(--secondary-purple);">Regulación INVIMA - Productos Cosméticos</h5>
+                                    <p style="color: var(--text-gray); line-height: 1.8;">El INVIMA regula estrictamente productos cosméticos exigiendo: (1) notificación sanitaria obligatoria (NSO); (2) certificación en Buenas Prácticas de Manufactura; (3) etiquetado conforme a la normativa; (4) prohibición de claims terapéuticos sin respaldo científico. En publicidad digital, todos los productos muestran número de registro INVIMA y se evitan afirmaciones médicas no comprobadas.</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="text-xl font-bold mb-3 mt-8" style="color: var(--text-dark);">Referencias</h4>
+                                <div class="space-y-3 text-sm" style="color: var(--text-gray); line-height: 1.7;">
+                                    <p class="apa-reference">Asociación Nacional de Empresarios de Colombia [ANDI]. (2023). <em>Informe de sostenibilidad del sector cosmético y de aseo en Colombia 2023</em>. Cámara de la Industria Cosmética y de Aseo de la ANDI.</p>
+                                    <p class="apa-reference">Chaffey, D., & Ellis-Chadwick, F. (2022). <em>Digital marketing: Strategy, implementation and practice</em> (8.ª ed.). Pearson Education Limited.</p>
+                                    <p class="apa-reference">Congreso de Colombia. (2011, 12 de octubre). Ley 1480 de 2011. Por medio de la cual se expide el Estatuto del Consumidor y se dictan otras disposiciones. <em>Diario Oficial No. 48.220.</em> https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=44306</p>
+                                    <p class="apa-reference">Congreso de Colombia. (2012, 17 de octubre). Ley 1581 de 2012. Por la cual se dictan disposiciones generales para la protección de datos personales. <em>Diario Oficial No. 48.587.</em> https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981</p>
+                                    <p class="apa-reference">Dirección de Impuestos y Aduanas Nacionales [DIAN]. (2020, 5 de mayo). <em>Resolución 000042 de 2020. Por la cual se adoptó el sistema de facturación electrónica.</em> https://www.dian.gov.co/normatividad/Normatividad/Resoluci%C3%B3n%20000042%20de%2005-05-2020.pdf</p>
+                                    <p class="apa-reference">Hootsuite. (2024). <em>Digital 2024: Colombia.</em> DataReportal. https://datareportal.com/reports/digital-2024-colombia</p>
+                                    <p class="apa-reference">HubSpot. (2024). <em>The state of marketing report 2024.</em> HubSpot Research. https://www.hubspot.com/state-of-marketing</p>
+                                    <p class="apa-reference">Kotler, P., Kartajaya, H., & Setiawan, I. (2021). <em>Marketing 5.0: Technology for humanity.</em> John Wiley & Sons.</p>
+                                    <p class="apa-reference">Later. (2024). <em>Instagram engagement report 2024.</em> Later Inc. https://later.com/instagram-marketing/</p>
+                                    <p class="apa-reference">Mailchimp. (2024). <em>Email marketing benchmarks and statistics by industry.</em> The Rocket Science Group LLC. https://mailchimp.com/resources/email-marketing-benchmarks/</p>
+                                    <p class="apa-reference">Meta Business. (2024). <em>Advertising benchmarks and insights.</em> Meta for Business. https://www.facebook.com/business/insights</p>
+                                    <p class="apa-reference">Ministerio de Salud y Protección Social. (2019, 28 de junio). <em>Resolución 2210 de 2019. Por la cual se establecen los lineamientos para la publicidad de productos cosméticos.</em> https://www.minsalud.gov.co/Normatividad_Nuevo/Resoluci%C3%B3n%20No.%202210%20de%202019.pdf</p>
+                                    <p class="apa-reference">WordStream by LOCALiQ. (2024). <em>Google Ads benchmarks for your industry.</em> WordStream Inc. https://www.wordstream.com/blog/ws/2023/01/09/google-ads-benchmarks</p>
+                                </div>
+                            </div>
+                            <!-- NEW CONTENT END -->
+
+                        </div>
+                    </div>
+
+                    <div id="informe-completo" class="sub-tab-content" style="display:none;">
+                        <div class="text-center py-16 px-8 rounded-2xl" style="background: linear-gradient(135deg, rgba(233, 30, 99, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%); border: 2px dashed rgba(233, 30, 99, 0.3);">
+                            <div class="mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4" style="stroke: var(--primary-pink);">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-3xl font-bold mb-3" style="color: var(--text-dark);">Informe Completo en PDF</h3>
+                            <p class="text-lg mb-8" style="color: var(--text-gray);">Accede al documento completo con todos los detalles, análisis y anexos en formato PDF.</p>
+                            <button onclick="startPdfDownload('1OMnF7VnBnOul9qdol_82dUIS2n1O9oea', 'Informe_Completo_Estrategia.pdf')" class="download-btn" style="width: auto; padding: 1.25rem 3rem; font-size: 1.1rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-2">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                                Descargar PDF Completo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <div class="footer-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span>Belleza al Día</span>
+            </div>
+            <nav class="footer-nav">
+                <ul>
+                    <li><a href="#" onclick="event.preventDefault(); document.querySelector('.tab[onclick*=\'resumen\']').click();">Resumen</a></li>
+                    <li><a href="#" onclick="event.preventDefault(); document.querySelector('.tab[onclick*=\'presupuesto\']').click();">Presupuesto</a></li>
+                    <li><a href="#" onclick="event.preventDefault(); document.querySelector('.tab[onclick*=\'kpis\']').click();">KPIs</a></li>
+                    <li><a href="#" onclick="event.preventDefault(); document.querySelector('.tab[onclick*=\'calendario\']').click();">Calendario</a></li>
+                    <li><a href="#" onclick="event.preventDefault(); document.querySelector('.tab[onclick*=\'plantillas\']').click();">Anexos</a></li>
+                    <li><a href="#" onclick="event.preventDefault(); document.querySelector('.tab[onclick*=\'normativa\']').click();">Normativa</a></li>
+                    <li><a href="#" onclick="event.preventDefault(); document.querySelector('.tab[onclick*=\'informe\']').click();">Informes</a></li>
+                </ul>
+            </nav>
+            <div class="footer-copyright">
+                <p>© 2025 - Arnold López Ayala - Todos los derechos reservados.</p>
+                <p>Informe Estratégico generado por Consultoría de Marketing Digital para Belleza al Día S.A.S.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="status" id="status"></div>
+
+    <div id="download-overlay" style="display: none;">
+        <div class="loader"></div>
+        <p class="font-bold">Generando su descarga...</p>
+    </div>
+
+    <button id="scrollTopBtn" title="Go to top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+    </button>
+
+</body>
+</html>
